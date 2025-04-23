@@ -119,3 +119,11 @@ button.selected {
     box-sizing: border-box; /* Include padding and border in the element's total width and height */
     cursor: pointer;
 }
+
+/* Estilos para los encabezados de categoría */
+.flops-container h4 {
+    width: 100%; /* Ocupa todo el ancho del contenedor */
+    margin-bottom: 5px;
+    color: #555; /* Color del encabezado */
+    font-weight: bold;
+}
