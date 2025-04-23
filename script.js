@@ -92,7 +92,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-    // Función para cargar los flops disponibles que coinciden con la selección actual
+    // Función para cargar los flops disponibles quecoinciden con la selección actual
     async function loadAvailableFlops() {
         // Limpia la lista de flops
         flopsContainer.innerHTML = '';
@@ -110,35 +110,56 @@ document.addEventListener('DOMContentLoaded', () => {
             const directoryHandle = await getDirectoryHandle(rootDirectory, basePath);
 
             if (directoryHandle) {
-                const availableFiles = [];
-                for await (const entry of directoryHandle.values()) {
-                    if (entry.kind === 'file') {
-                        availableFiles.push(entry.name);
+                // Iterar sobre las carpetas (categorías) dentro del directorio
+                for await (const categoryEntry of directoryHandle.values()) {
+                    if (categoryEntry.kind === 'directory') {
+                        const categoryName = categoryEntry.name; // Nombre de la carpeta = Categoría
+
+                        // Crea un encabezado para la categoría
+                        const categoryHeader = document.createElement('h4');
+                        categoryHeader.textContent = categoryName;
+                        flopsContainer.appendChild(categoryHeader);
+
+                        // Obtiene los archivos dentro de la categoría
+                        const availableFiles = [];
+                        for await (const entry of categoryEntry.values()) {
+                            if (entry.kind === 'file') {
+                                availableFiles.push(entry.name);
+                            }
+                        }
+
+                        // Crea los chips de flop para cada archivo
+                        if (availableFiles.length > 0) {
+                            availableFiles.forEach(fileName => {
+                                // Elimina la extensión del archivo
+                                const fileNameWithoutExtension = fileName.replace(/\.[^/.]+$/, "");
+
+                                // Reemplaza las letras con los símbolos de palo
+                                const formattedFileName = fileNameWithoutExtension
+                                    .replace(/c/g, "♣️") // Clubs
+                                    .replace(/s/g, "♠️") // Spades
+                                    .replace(/h/g, "♥️") // Hearts
+                                    .replace(/d/g, "♦️"); // Diamonds
+
+                                const flopChip = document.createElement('div');
+                                flopChip.classList.add('flop-chip');
+                                flopChip.textContent = formattedFileName; // Muestra el nombre formateado
+                                flopChip.addEventListener('click', () => showFlopDetails(`${basePath}${categoryName}/${fileName}`)); // Pasa la ruta completa a showFlopDetails
+                                flopsContainer.appendChild(flopChip);
+                            });
+                        } else {
+                            // Si no hay archivos, muestra un mensaje
+                            const noFilesMessage = document.createElement('div');
+                            noFilesMessage.textContent = 'No flops available in this category.';
+                            flopsContainer.appendChild(noFilesMessage);
+                        }
                     }
                 }
 
-                if (availableFiles.length > 0) {
-                    availableFiles.forEach(fileName => {
-                        // Elimina la extensión del archivo
-                        const fileNameWithoutExtension = fileName.replace(/\.[^/.]+$/, "");
-
-                        // Reemplaza las letras con los símbolos de palo
-                        const formattedFileName = fileNameWithoutExtension
-                            .replace(/c/g, "♣️") // Clubs
-                            .replace(/s/g, "♠️") // Spades
-                            .replace(/h/g, "♥️") // Hearts
-                            .replace(/d/g, "♦️"); // Diamonds
-
-                        const flopChip = document.createElement('div');
-                        flopChip.classList.add('flop-chip');
-                        flopChip.textContent = formattedFileName; // Muestra el nombre formateado
-                        flopChip.addEventListener('click', () => showFlopDetails(fileName)); // Pasa el nombre completo a showFlopDetails
-                        flopsContainer.appendChild(flopChip);
-                    });
-                } else {
-                    // Si no hay archivos, muestra un mensaje
+                // Si no se encontraron categorías
+                if (flopsContainer.children.length === 0) {
                     const noFilesMessage = document.createElement('div');
-                    noFilesMessage.textContent = 'No flops available for this combination.';
+                    noFilesMessage.textContent = 'No categories or flops available for this combination.';
                     flopsContainer.appendChild(noFilesMessage);
                 }
             } else {
@@ -177,13 +198,10 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // Función para mostrar los detalles de un flop seleccionado
-    async function showFlopDetails(fileName) {
-        // Construye la ruta de la imagen
-        const imagePath = `${currentBBRange}/${currentHeroPosition}/${currentVillainPosition}/${fileName}`;
-
+    async function showFlopDetails(fullImagePath) {
         try {
             // Obtiene el archivo de la imagen
-            const fileHandle = await getFileHandle(rootDirectory, imagePath);
+            const fileHandle = await getFileHandleFromPath(rootDirectory, fullImagePath);
 
             if (fileHandle) {
                 const file = await fileHandle.getFile();
@@ -196,7 +214,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
                 reader.readAsDataURL(file); // Lee el archivo como Data URL
             } else {
-                console.warn('File not found:', imagePath);
+                console.warn('File not found:', fullImagePath);
                 flopImage.src = '#'; // Limpia la imagen
                 flopImage.style.display = 'none';
                 alert('Image not found!');
@@ -209,33 +227,35 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    // Función para obtener el archivo
-    async function getFileHandle(root, filePath) {
-        if (!root) {
-            return null;
-        }
+     // Función auxiliar para obtener un FileHandle a partir de una ruta completa
+    async function getFileHandleFromPath(root, fullImagePath) {
+      if (!root) {
+        return null;
+      }
 
-        const pathParts = filePath.split('/').filter(part => part !== '');
-        let currentDirectory = root;
-        let fileHandle = null;
+      const pathParts = fullImagePath.split('/').filter(part => part !== '');
+      let currentDirectory = root;
+      let fileHandle = null;
 
-        for (let i = 0; i < pathParts.length - 1; i++) {
-            try {
-                currentDirectory = await currentDirectory.getDirectoryHandle(pathParts[i]);
-            } catch (err) {
-                console.warn(`Directory not found: ${pathParts[i]} in path ${filePath}`);
-                return null;
-            }
-        }
-
+      // Navega por el directorio
+      for (let i = 0; i < pathParts.length - 1; i++) {
         try {
-            fileHandle = await currentDirectory.getFileHandle(pathParts[pathParts.length - 1]);
+          currentDirectory = await currentDirectory.getDirectoryHandle(pathParts[i]);
         } catch (err) {
-            console.warn(`File not found: ${pathParts[pathParts.length - 1]} in path ${filePath}`);
-            return null;
+          console.warn(`Directory not found: ${pathParts[i]} in path ${fullImagePath}`);
+          return null;
+        }
+      }
+
+      // Obtiene el archivo
+      try {
+        fileHandle = await currentDirectory.getFileHandle(pathParts[pathParts.length - 1]);
+        } catch (err) {
+          console.warn(`File not found: ${pathParts[pathParts.length - 1]} in path ${fullImagePath}`);
+          return null;
         }
 
-        return fileHandle;
+      return fileHandle;
     }
 
     function hideVillainPositionsAndFlops() {
