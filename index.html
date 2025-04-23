@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Poker Range Viewer</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Poker Range Viewer</h1>
+
+        <!-- Selector de Directorio Raíz -->
+        <div class="directory-selector">
+            <label for="root-directory">Root Directory:</label>
+            <input type="text" id="root-directory" placeholder="Click to select root directory" readonly>
+        </div>
+
+        <!-- Rango BB -->
+        <div class="range-bb">
+            <h3>BB Range</h3>
+            <button class="bb-range-btn" data-range="60+">60+</button>
+            <button class="bb-range-btn" data-range="35-60">35-60</button>
+            <button class="bb-range-btn" data-range="22-35">22-35</button>
+            <button class="bb-range-btn" data-range="12-22">12-22</button>
+        </div>
+
+        <!-- Hero Position (oculto inicialmente) -->
+        <div class="hero-positions" id="hero-positions" style="display: none;">
+            <h3>Hero Position</h3>
+            <button class="position-btn" data-position="UTG">UTG</button>
+            <button class="position-btn" data-position="LJ">LJ/HJ</button>
+            <button class="position-btn" data-position="CO">CO</button>
+            <button class="position-btn" data-position="BTN">BTN</button>
+            <button class="position-btn" data-position="SB">SB</button>
+        </div>
+
+        <!-- Villain Position (oculto inicialmente) -->
+        <div class="villain-positions" id="villain-positions" style="display: none;">
+            <h3>Villain Position</h3>
+            <button class="position-btn" data-position="UTG">UTG</button>
+            <button class="position-btn" data-position="LJ">LJ/HJ</button>
+            <button class="position-btn" data-position="CO">CO</button>
+            <button class="position-btn" data-position="BTN">BTN</button>
+            <button class="position-btn" data-position="SB">SB</button>
+            <button class="position-btn" data-position="BB">BB</button>
+        </div>
+
+        <!-- Contenedor Principal para Imagen y Flops -->
+        <div class="image-flops-container">
+            <!-- Visualización de la Imagen -->
+            <div class="image-display">
+                <img id="flop-image" src="#" alt="Flop Image" style="display:none;">
+            </div>
+
+            <!-- Lista de Flops (mostrar después de seleccionar posiciones) -->
+            <div class="flops-list" id="flops-list" style="display: none;">
+                <h3>Flops</h3>
+                <div class="flops-container" id="flops-container"></div>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
