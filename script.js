@@ -115,10 +115,19 @@ document.addEventListener('DOMContentLoaded', () => {
                     if (categoryEntry.kind === 'directory') {
                         const categoryName = categoryEntry.name; // Nombre de la carpeta = Categoría
 
+                        // Crear el contenedor de la categoría
+                        const categoryContainer = document.createElement('div');
+                        categoryContainer.classList.add('category-container');
+
                         // Crea un encabezado para la categoría
-                        const categoryHeader = document.createElement('h4');
+                        const categoryHeader = document.createElement('div');
+                        categoryHeader.classList.add('category-header');
                         categoryHeader.textContent = categoryName;
-                        flopsContainer.appendChild(categoryHeader);
+                        categoryContainer.appendChild(categoryHeader);
+
+                        // Crea la lista de flops para esta categoría
+                        const flopList = document.createElement('div');
+                        flopList.classList.add('flop-list');
 
                         // Obtiene los archivos dentro de la categoría
                         const availableFiles = [];
@@ -127,6 +136,9 @@ document.addEventListener('DOMContentLoaded', () => {
                                 availableFiles.push(entry.name);
                             }
                         }
+
+                        // Ordenar los nombres de los archivos alfabéticamente
+                        availableFiles.sort();
 
                         // Crea los chips de flop para cada archivo
                         if (availableFiles.length > 0) {
@@ -145,14 +157,26 @@ document.addEventListener('DOMContentLoaded', () => {
                                 flopChip.classList.add('flop-chip');
                                 flopChip.textContent = formattedFileName; // Muestra el nombre formateado
                                 flopChip.addEventListener('click', () => showFlopDetails(`${basePath}${categoryName}/${fileName}`)); // Pasa la ruta completa a showFlopDetails
-                                flopsContainer.appendChild(flopChip);
+                                flopList.appendChild(flopChip);
                             });
                         } else {
                             // Si no hay archivos, muestra un mensaje
                             const noFilesMessage = document.createElement('div');
                             noFilesMessage.textContent = 'No flops available in this category.';
-                            flopsContainer.appendChild(noFilesMessage);
+                            flopList.appendChild(noFilesMessage);
                         }
+
+                        // Añade la lista de flops al contenedor de la categoría
+                        categoryContainer.appendChild(flopList);
+
+                        // Añade el contenedor de la categoría al contenedor principal
+                        flopsContainer.appendChild(categoryContainer);
+
+                        // Añade funcionalidad para expandir/colapsar la categoría
+                        categoryHeader.addEventListener('click', () => {
+                            categoryContainer.classList.toggle('expanded');
+                            categoryHeader.classList.toggle('collapsed');
+                        });
                     }
                 }
 
