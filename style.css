@@ -1,60 +1,54 @@
 body {
     font-family: sans-serif;
     margin: 20px;
-    background-color: #f4f4f4; /* Un fondo suave */
+    background-color: #f4f4f4;
 }
 
 .container {
     max-width: 800px;
     margin: 0 auto;
-    background-color: #fff; /* Fondo blanco para el contenedor principal */
+    background-color: #fff;
     padding: 20px;
     border-radius: 10px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Sombra sutil */
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 
-/* Estilos generales para los botones */
 button {
     padding: 10px 20px;
-    background-color: rgba(76, 175, 80, 0.8); /* Verde con transparencia */
+    background-color: rgba(76, 175, 80, 0.8);
     color: #fff;
     border: none;
-    border-radius: 25px; /* Bordes redondeados */
+    border-radius: 25px;
     cursor: pointer;
     margin: 5px;
-    transition: background-color 0.3s ease, transform 0.2s ease; /* Transiciones suaves */
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2); /* Sombra */
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
 }
 
-/* Hover effect */
 button:hover {
-    background-color: rgba(76, 175, 80, 1); /* Verde más sólido al pasar el ratón */
-    transform: translateY(-2px); /* Ligeramente levantado */
+    background-color: rgba(76, 175, 80, 1);
+    transform: translateY(-2px);
 }
 
-/* Active (pressed) effect */
 button:active {
-    transform: translateY(0); /* Vuelve a la posición original */
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2); /* Sombra reducida */
+    transform: translateY(0);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
 }
 
-/* Highlight the selected button */
 button.selected {
-    background-color: #005f73; /* Un color diferente para el botón seleccionado */
+    background-color: #005f73;
     color: white;
 }
 
-/* Contenedor Principal para Imagen y Flops */
 .image-flops-container {
-    display: flex; /* Para alinear la imagen y los flops en la misma línea */
-    align-items: flex-start; /* Alinea la imagen y los flops en la parte superior */
-    margin-top: 20px; /* Espacio superior */
+    display: flex;
+    align-items: flex-start;
+    margin-top: 20px;
 }
 
-/* Estilos para la visualización de la imagen */
 .image-display {
-    width: 50%; /* La imagen ocupa el 50% del ancho del contenedor */
-    max-width: 400px; /* Ancho máximo de la imagen */
+    width: 50%;
+    max-width: 400px;
     overflow: hidden;
 }
 
@@ -63,44 +57,46 @@ button.selected {
     height: auto;
     display: block;
     object-fit: contain;
-    border-radius: 10px; /* Redondea las esquinas de la imagen */
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2); /* Sombra en la imagen */
+    border-radius: 10px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
 }
 
-/* Estilos para la lista de flops */
 .flops-list {
-    width: 50%; /* Los flops ocupan el 50% del ancho del contenedor */
-    padding-left: 20px; /* Espacio entre la imagen y los flops */
+    width: 50%;
+    padding-left: 20px;
 }
 
 .flops-list h3 {
     margin-bottom: 10px;
-    color: #333; /* Color del título */
+    color: #333;
 }
 
 .flops-container {
-    display: flex; /* Activa flexbox */
-    flex-wrap: wrap; /* Permite que los elementos se envuelvan a la siguiente línea */
-    justify-content: flex-start; /* Alinea los elementos a la izquierda */
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
 }
 
-/* Estilos para los chips de flop */
 .flops-container .flop-chip {
-    background-color: rgba(240, 240, 240, 0.7); /* Gris claro con transparencia */
+    background-color: rgba(240, 240, 240, 0.7);
     border: 1px solid #ccc;
-    border-radius: 20px; /* Forma de chip */
+    border-radius: 20px;
     padding: 8px 15px;
     margin: 5px;
     cursor: pointer;
-    display: inline-block; /* Permite dar padding y margen */
-    transition: background-color 0.3s ease; /* Transición suave */
+    display: inline-block;
+    transition: background-color 0.3s ease;
+    /* width: calc(33.333% - 10px);   Remove the fixed width */
+    box-sizing: border-box;
+    font-size: 0.5em;
+    word-break: break-word;
+    text-align: center; /* Center the text horizontally */
+    white-space: nowrap; /* Prevent text from wrapping */
 }
-
 .flops-container .flop-chip:hover {
-    background-color: rgba(200, 200, 200, 0.9); /* Gris más oscuro al pasar el ratón */
+    background-color: rgba(200, 200, 200, 0.9);
 }
 
-/* Estilos para el selector de directorio */
 .directory-selector {
     margin-bottom: 20px;
 }
@@ -116,14 +112,48 @@ button.selected {
     padding: 10px;
     border: 1px solid #ccc;
     border-radius: 5px;
-    box-sizing: border-box; /* Include padding and border in the element's total width and height */
+    box-sizing: border-box;
     cursor: pointer;
 }
 
-/* Estilos para los encabezados de categoría */
-.flops-container h4 {
-    width: 100%; /* Ocupa todo el ancho del contenedor */
+.category-header {
+    width: 100%;
     margin-bottom: 5px;
-    color: #555; /* Color del encabezado */
+    color: #555;
     font-weight: bold;
+    cursor: pointer;
+    padding: 8px;
+    background-color: #eee;
+    border-radius: 5px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.category-header:hover {
+    background-color: #ddd;
+}
+
+.category-header::after {
+    content: '\25BC';
+    font-size: 0.4em;
+}
+
+.category-header.collapsed::after {
+    content: '\25B6';
+}
+
+.flop-list {
+    display: none;
+    flex-wrap: wrap;
+    padding-left: 20px;
+    width: 300px; /* Adjust this value as needed */
+}
+
+.category-container {
+    width: 100%;
+}
+
+.category-container.expanded .flop-list {
+    display: flex;
 }
